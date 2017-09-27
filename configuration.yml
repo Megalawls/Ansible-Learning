@@ -1,0 +1,50 @@
+---
+- hosts: hosts
+  remote_user: vagrant
+  become: yes
+
+  tasks:
+  - name: Update
+    command: apt-get update
+  - name: Install Maven, git, wget, and curl
+    apt: name={{item}} state=latest
+    with_items: 
+      - maven2
+      - git
+      - curl
+      - wget
+      - openjdk-8-jdk
+      - openjdk-8-jre
+
+  - name: Example Command
+    command: "{{item}}"
+    with_items:
+      - echo "Jenkins doesnt want to install by command but will by shell"
+
+  - name: Install Jenkins
+    shell: "{{ item }}"
+    with_items:
+      - 'wget -q -O - https://pkg.jenkins.io/debian/jenkins-ci.org.key | sudo apt-key add -'
+      - 'echo deb http://pkg.jenkins.io/debian-stable binary/ | sudo tee /etc/apt/sources.list.d/jenkins.list'
+      - 'sudo apt-get update'
+      - 'sudo apt-get install -y jenkins'
+
+  - name: Start Jenkins & Open Firewall Ports
+    shell: "{{ item }}"
+    with_items:
+      - 'sudo service jenkins start'
+      - 'sudo service jenkins start'
+      - 'sudo ufw allow 8080'
+      - 'sudo ufw status'
+
+  - name: Install Docker
+    shell: "{{ item }}"
+    with_items:
+      - 'curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -'
+      - 'sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"'
+      - 'sudo apt-get update'
+      - 'apt-cache policy docker-ce'
+      - 'sudo apt-get install -y docker-ce'
+      - 'sudo service docker status'
+      - 'sudo docker pull sonatype/nexus'
+      - 'sudo docker pull jenkins'
