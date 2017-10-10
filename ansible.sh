@@ -5,7 +5,7 @@ sudo apt-get install -y python-pip
 sudo pip install --upgrade pip
 pip -V
 
-#Installs a bunch of shit like Pip, python, perl etc. in case the above fails
+#Installs a bunch of things like Pip, python, perl etc. in case the above fails
 sudo apt-get install -y software-properties-common
 
 #Installs ansible
